@@ -10,6 +10,7 @@ import random
 import numpy as np
 
 ################################### LEITURA DATASET ###################################
+#leitura do arquivo .csv
 base_cancer = pd.read_csv('./data/breast-cancer.csv')
 
 #nomeando as colunas
@@ -88,10 +89,44 @@ base_cancer.loc[1241232, 'Bare_Nuclei'] = random.randint(1, 10)
 #transformando os valores de 'Bare_Nuclei' em números(antes estavam como Strings)
 base_cancer.Bare_Nuclei = pd.to_numeric(base_cancer.Bare_Nuclei)
 
+#atributo que será previsto(o resultado se o paciente tem ou não cancer)
+previsao = base_cancer.iloc[:,9].values
 
-################################### ANÁLISE DE DADOS ###################################
+for i in range(len(previsao)):
+    if previsao[i] >= 3:
+        previsao[i] = 1
+    else:
+        previsao[i] = 0
+
+#excluindo o que será previsto da base de dados
+base_cancer = base_cancer.drop(columns='Class')
+
+#valores para realizar a previsão
+previsores = base_cancer.iloc[:,:].values
 
 
+################################### CLASSIFICAÇÃO DOS DADOS ###################################
+
+from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+
+
+#dividindo dados em teste e treinamento 
+# Usou-se 25%(test_size = 0.25) como quantidade de atributos para teste e o restante para treinamento
+previsores_treinamento, previsores_teste, previsao_treinamento, previsao_teste = train_test_split(previsores, previsao, test_size=0.25, random_state=0)
+
+rede_linear = linear_model.LinearRegression() 
+
+rede_linear.fit(previsores_treinamento, previsao_treinamento)
+
+results = rede_linear.predict(previsores_teste)
+
+print(rede_linear.coef_)
+
+#results = results.astype(np.int)
+
+        
+print('Score: ', rede_linear.score(previsores_teste, previsao_teste))
 
 
 
