@@ -7,7 +7,6 @@ Created on Wed Sep  9 17:45:20 2020
 
 import pandas as pd
 import random
-import numpy as np
 
 ################################### LEITURA DATASET ###################################
 #leitura do arquivo .csv
@@ -109,25 +108,25 @@ previsores = base_cancer.iloc[:,:].values
 
 from sklearn.model_selection import train_test_split
 from sklearn import linear_model
+from sklearn import metrics
 
 
 #dividindo dados em teste e treinamento 
 # Usou-se 25%(test_size = 0.25) como quantidade de atributos para teste e o restante para treinamento
 previsores_treinamento, previsores_teste, previsao_treinamento, previsao_teste = train_test_split(previsores, previsao, test_size=0.25, random_state=0)
 
+#atribuindo a função a uma variável para ser utilizada
 rede_linear = linear_model.LinearRegression() 
 
+#treinando o modelo com os valores separados para treinamento
 rede_linear.fit(previsores_treinamento, previsao_treinamento)
 
+#testando o modelo com os valores separados para teste
 results = rede_linear.predict(previsores_teste)
 
-print(rede_linear.coef_)
+#exibindo o score alcançado pela rede(o quão próximos os dados estão da linha de regressão)
+print('Score(R quadrado): {}'  .format(rede_linear.score(previsores_treinamento, previsao_treinamento)))
 
-#results = results.astype(np.int)
-
-        
-print('Score: ', rede_linear.score(previsores_teste, previsao_teste))
-
-
-
+#exibindo o score alcançado através do teste com os valores de de previsao_teste
+print('Score(R quadrado de teste): {}' .format(metrics.r2_score(previsao_teste, results)))
 
