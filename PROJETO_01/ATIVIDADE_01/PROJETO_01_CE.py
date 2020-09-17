@@ -106,9 +106,9 @@ previsores = base_cancer.iloc[:,:].values
 
 
 ################################### CLASSIFICAÇÃO DOS DADOS ###################################
-
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import confusion_matrix
 
 
 #dividindo dados em teste e treinamento 
@@ -121,10 +121,13 @@ classificador = MLPClassifier(random_state=0, max_iter=300)
 #treinando o modelo com os valores separados para treinamento
 classificador.fit(previsores_treinamento, previsao_treinamento)
 
+#realizando previção do dados para 'previsores_teste'
+resultados = classificador.predict(previsores_teste)
+
 #realizando previsão usando o classificador perceptron multicamadas
 classificador.predict_proba(previsores_teste)
 
-#precisão média nos dados de teste
+#precisão(acurácia) média nos dados de teste
 classificador.score(previsores_teste, previsao_teste)
 
 #número de iterações que o classificador executou
@@ -135,3 +138,6 @@ print(classificador.n_layers_)
 
 #função de ativação de saída
 print(classificador.out_activation_)
+
+#montando matriz de confusão
+matrix = confusion_matrix(previsao_teste, resultados)
