@@ -108,7 +108,7 @@ previsores = base_cancer.iloc[:,:].values
 ################################### CLASSIFICAÇÃO DOS DADOS ###################################
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, mean_absolute_error
 
 
 #dividindo dados em teste e treinamento 
@@ -128,7 +128,9 @@ resultados = classificador.predict(previsores_teste)
 classificador.predict_proba(previsores_teste)
 
 #precisão(acurácia) média nos dados de teste
-classificador.score(previsores_teste, previsao_teste)
+score = classificador.score(previsores_teste, previsao_teste)
+
+print('Score da rede: {}' .format(score))
 
 #número de iterações que o classificador executou
 print(classificador.n_iter_)
@@ -141,3 +143,9 @@ print(classificador.out_activation_)
 
 #montando matriz de confusão
 matrix = confusion_matrix(previsao_teste, resultados)
+
+#calculando taxa de erro da rede
+mae = mean_absolute_error(previsao_teste, resultados)
+
+#exibindo a taxa de erro calculada
+print("Taxa de erro: {}" .format(mae))
